@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Film Date Stamp — 胶片日期戳</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">▦</span><div><span class="eyebrow">DIGITAL DATE BACK</span><h1>Film Date Stamp<span class="brand-period">.</span></h1></div></div>
+      <div class="topbar-note"><span class="live-dot"></span>本地处理 · 无需上传服务器</div>
+    </header>
+
+    <main class="workspace">
+      <section class="preview-panel" aria-label="照片预览">
+        <div class="panel-heading"><div><span class="eyebrow">01 / PREVIEW</span><h2>预览画面</h2></div><span id="photoCount" class="count-badge">未导入照片</span></div>
+        <div id="dropZone" class="stage" tabindex="0" role="button" aria-label="点击或拖放导入照片">
+          <div id="emptyState" class="empty-state"><div class="empty-icon" aria-hidden="true"><span>+</span></div><h3>把照片拖到这里</h3><p>或点击选择 JPG、PNG、WebP 文件</p><span class="empty-hint">支持一次导入多张 · 照片仅在本机处理</span></div>
+          <canvas id="previewCanvas" hidden aria-label="日期戳照片预览"></canvas>
+          <span id="previewTag" class="preview-tag" hidden>实时预览</span>
+        </div>
+        <div class="preview-footer"><div id="photoInfo" class="photo-info">导入照片后即可开始</div><div id="previewDate" class="preview-date"></div></div>
+        <div id="photoStrip" class="photo-strip" aria-label="选择预览照片" hidden></div>
+        <div class="stage-actions"><button id="addPhotos" class="button ghost" type="button">＋ 添加照片</button><button id="clearPhotos" class="button text-button" type="button" disabled>清空列表</button></div>
+        <input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" multiple hidden>
+      </section>
+
+      <aside class="controls-panel" aria-label="日期戳设置">
+        <div class="panel-heading settings-heading"><div><span class="eyebrow">02 / CONTROLS</span><h2>日期戳设置</h2></div><span class="settings-symbol" aria-hidden="true">✳</span></div>
+
+        <div class="control-section"><div class="section-title"><span class="section-number">01</span><h3>日期内容</h3></div>
+          <label for="dateText">显示文字</label><input id="dateText" class="input date-text" value="26' 10 04" maxlength="30" spellcheck="false" autocomplete="off"><div class="field-note">可输入数字、空格、撇号、冒号、点、横线和斜线</div>
+          <div class="inline-fields"><div><label for="datePicker">选择日期</label><input id="datePicker" class="input" type="date" value="2026-10-04"></div><div><label for="dateFormat">日期格式</label><select id="dateFormat" class="input"><option value="yyqmmdd">26' 10 04</option><option value="yymmdd">26 10 04</option><option value="yyyymmdd">2026 10 04</option><option value="mmddyy">10 04 26</option><option value="yymmddtime">26 10 04 20:30</option></select></div></div>
+          <label for="dateMode">批量日期来源</label><select id="dateMode" class="input"><option value="manual">所有照片使用显示文字</option><option value="exif">优先读取每张照片的 EXIF 拍摄日期</option></select><p id="exifHint" class="field-note">没有 EXIF 拍摄日期时使用上方的显示文字。</p>
+        </div>
+
+        <div class="control-section"><div class="section-title"><span class="section-number">02</span><h3>大小与位置</h3></div>
+          <div class="range-heading"><label for="sizeRange">日期戳宽度</label><output id="sizeValue" for="sizeRange">18%</output></div><input id="sizeRange" type="range" min="5" max="40" step="0.5" value="18"><div class="range-scale"><span>5%</span><span>占照片宽度</span><span>40%</span></div>
+          <label for="position">位置</label><select id="position" class="input"><option value="bottom-right">右下角</option><option value="bottom-left">左下角</option><option value="top-right">右上角</option><option value="top-left">左上角</option><option value="center">居中</option><option value="custom">自定义位置</option></select>
+          <div id="marginControls" class="inline-fields"><div><div class="range-heading"><label for="marginX">水平边距</label><output id="marginXValue">4%</output></div><input id="marginX" type="range" min="0" max="25" step="0.5" value="4"></div><div><div class="range-heading"><label for="marginY">垂直边距</label><output id="marginYValue">5%</output></div><input id="marginY" type="range" min="0" max="25" step="0.5" value="5"></div></div>
+          <div id="customControls" class="custom-controls" hidden><p class="field-note">也可在预览照片上拖动日期戳。</p><div class="inline-fields"><div><div class="range-heading"><label for="customX">水平位置</label><output id="customXValue">72%</output></div><input id="customX" type="range" min="0" max="100" step="0.5" value="72"></div><div><div class="range-heading"><label for="customY">垂直位置</label><output id="customYValue">88%</output></div><input id="customY" type="range" min="0" max="100" step="0.5" value="88"></div></div></div>
+        </div>
+
+        <div class="control-section"><div class="section-title"><span class="section-number">03</span><h3>胶片曝光</h3></div>
+          <div class="preset-row" role="group" aria-label="胶片风格预设"><button class="preset active" data-color="#f57442" data-opacity="78" data-brightness="100" data-glow="45" type="button"><span class="swatch amber"></span>经典橙红</button><button class="preset" data-color="#ff503a" data-opacity="69" data-brightness="88" data-glow="65" type="button"><span class="swatch red"></span>柔和暖红</button><button class="preset" data-color="#ffd16a" data-opacity="82" data-brightness="112" data-glow="35" type="button"><span class="swatch yellow"></span>琥珀黄</button></div>
+          <div class="color-field"><label for="stampColor">自定义颜色</label><input id="stampColor" type="color" value="#f57442"></div>
+          <div class="range-heading"><label for="opacity">透明度</label><output id="opacityValue">78%</output></div><input id="opacity" type="range" min="10" max="100" step="1" value="78">
+          <div class="range-heading"><label for="brightness">亮度</label><output id="brightnessValue">100%</output></div><input id="brightness" type="range" min="50" max="160" step="1" value="100">
+          <div class="range-heading"><label for="glow">柔光</label><output id="glowValue">45%</output></div><input id="glow" type="range" min="0" max="100" step="1" value="45">
+        </div>
+
+        <div class="control-section export-section"><div class="section-title"><span class="section-number">04</span><h3>导出</h3></div><div class="inline-fields"><div><label for="exportFormat">文件格式</label><select id="exportFormat" class="input"><option value="jpeg">JPG</option><option value="png">PNG</option></select></div><div id="qualityWrap"><div class="range-heading"><label for="quality">JPG 质量</label><output id="qualityValue">92%</output></div><input id="quality" type="range" min="60" max="100" step="1" value="92"></div></div><button id="exportOne" class="button primary" type="button" disabled>导出当前照片 <span>↗</span></button><button id="exportAll" class="button secondary" type="button" disabled>批量导出 ZIP <span>↓</span></button><p id="status" class="status" role="status" aria-live="polite">导出时按照片原始分辨率渲染。</p></div>
+      </aside>
+    </main>
+    <footer class="footer"><span>FILM DATE STAMP / 01</span><span>七段式光学日期 · 浏览器本地生成</span></footer>
+  </div>
+</body>
+</html>
