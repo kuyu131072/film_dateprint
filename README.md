@@ -4,7 +4,12 @@
 
 ## Windows 版
 
-从 [Releases](https://github.com/kuyu131072/film_dateprint/releases) 下载 `FilmDateStamp-v1.0.0-win-x64.exe`，双击即可打开独立窗口。EXE 包含 .NET 运行时及页面资源；电脑需安装 Microsoft Edge WebView2 Runtime。首次运行会把内嵌页面资源释放到用户的 `%LOCALAPPDATA%\FilmDateStamp` 目录。导出时会弹出 Windows 保存对话框。
+从 [Releases](https://github.com/kuyu131072/film_dateprint/releases) 选择一个 Windows x64 版本：
+
+- `FilmDateStamp-v1.0.0-win-x64.exe`（约 51 MB）：包含 .NET 运行时，适合直接分发。
+- `FilmDateStamp-v1.0.0-win-x64-slim.exe`（约 1.4 MB）：功能相同，但电脑必须预先安装 **.NET 9 Desktop Runtime x64**。
+
+两者都需要 Microsoft Edge WebView2 Runtime。首次运行会把内嵌页面资源释放到用户的 `%LOCALAPPDATA%\FilmDateStamp` 目录。导出时会弹出 Windows 保存对话框。
 
 该 EXE 尚未进行代码签名，Windows SmartScreen 可能显示未知发布者提示。
 
@@ -39,3 +44,9 @@ dotnet publish desktop/FilmDateStamp.csproj -c Release -r win-x64 -o publish
 ```
 
 构建结果为 `publish/FilmDateStamp.exe`。项目使用 `Microsoft.Web.WebView2` NuGet 包，版本见项目文件。
+
+需要较小的、依赖系统 .NET 的 EXE 时，使用：
+
+```powershell
+dotnet publish desktop/FilmDateStamp.csproj -c Release -r win-x64 --self-contained false -p:EnableCompressionInSingleFile=false -o publish-slim
+```
