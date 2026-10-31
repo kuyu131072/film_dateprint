@@ -3,3 +3,6 @@ work/
 dist/
 *.zip
 .DS_Store
+desktop/bin/
+desktop/obj/
+publish/

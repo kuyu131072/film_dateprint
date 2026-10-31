@@ -6,3 +6,4 @@
 - Read EXIF `DateTimeOriginal` for capture dates; if missing, use the manual date. Do not substitute the file modification time.
 - Before shipping changes, run `node --check app.js`, then open `index.html?selftest=1` and `index.html?integration=1` in a modern browser. Keep the three specified resolutions covered.
 - Do not commit user photos, generated exports, browser profiles, or temporary test files.
+- The Windows wrapper lives in `desktop/`. Keep its embedded resources aligned with the root HTML, CSS, and JavaScript files; publish a single self-contained win-x64 EXE and test startup before updating a release.
